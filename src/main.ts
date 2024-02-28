@@ -14,8 +14,8 @@ export default class AliasManagementPlugin extends Plugin {
   settings: SettingsTypes = DefaultSettings
 
   fpath_to_physical_aliases = new Map<string, string[]>();
-  physical_alias_to_generated_aliases = new Map<string, string[]>();
-  generated_alias_to_fpaths= new Map<string, Array<[string, string]>>();
+  physical_alias_to_generated_aliases = new Map<string, Set<string>>();
+  generated_alias_to_fpaths= new Map<string, Array<[string, string, string]>>();
 
   // If there are aliases to be excluded matching filenames: keep mapping for correct color representation
   fpath_filename_ignored = new Set<string>();
@@ -34,7 +34,7 @@ export default class AliasManagementPlugin extends Plugin {
     //
     this.registerView(
       ListAliasesViewIdentifier,
-      (leaf) => new ListAliasesView(leaf)
+      (leaf) => new ListAliasesView(leaf, this)
     )
     this.addRibbonIcon(ListAliasesViewIcon, ListAliasesViewName, async () => {
       this.activateListAliasesView()
@@ -54,7 +54,7 @@ export default class AliasManagementPlugin extends Plugin {
     //
     this.registerView(
       DuplicateAliasesViewIdentifier,
-      (leaf) => new DuplicateAliasesView(leaf)
+      (leaf) => new DuplicateAliasesView(leaf, this)
     )
     this.addRibbonIcon(DuplicateAliasesViewIcon, DuplicateAliasesViewName, async () => {
       this.activateDuplicateAliasesView()
@@ -108,19 +108,19 @@ export default class AliasManagementPlugin extends Plugin {
   }
 
   async onActiveLeafChange(leaf: WorkspaceLeaf) {
-    active_leaf_changed(leaf)
+    active_leaf_changed(this, leaf)
   }
 
   async onRename(file_new: TFile, fpath_old: string) {
-    file_renamed(file_new, fpath_old)
+    file_renamed(this, file_new, fpath_old)
   }
 
   async onChanged(file: TFile, md_content: string, cache: CachedMetadata) {
-    file_changed(file, md_content, cache)
+    file_changed(this, file, md_content, cache)
   }
 
   async onDeleted(file: TFile, prevCache: CachedMetadata | null) {
-    file_deleted(file, prevCache)
+    file_deleted(this, file, prevCache)
   }
 
   onunload() {

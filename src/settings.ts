@@ -138,7 +138,7 @@ export class SettingsTab extends PluginSettingTab {
             if(!view) {
               return
             }
-            sort_duplicate_aliases_view(view)
+            sort_duplicate_aliases_view(this.plugin, view)
           }
         }))
 
@@ -157,11 +157,11 @@ export class SettingsTab extends PluginSettingTab {
     this.plugin.physical_alias_to_generated_aliases = new Map()
 
     if (this.app.workspace.getLeavesOfType(ListAliasesViewIdentifier).length === 1) {
-      init_list_aliases_view()
+      init_list_aliases_view(this.plugin)
     }
 
     if (this.app.workspace.getLeavesOfType(DuplicateAliasesViewIdentifier).length === 1) {
-      init_duplicate_aliases_view()
+      init_duplicate_aliases_view(this.plugin)
     }
   }
 }
