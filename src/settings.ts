@@ -26,7 +26,7 @@ s/ //g`,
   exclude_physical_aliases_regex_str: `^readme$/i
 ^general$/i`,
   sort_desc: true,
-  open_links_vertically_splitted: true,
+  open_links_vertically_splitted: true
 }
 
 export class SettingsTab extends PluginSettingTab {
@@ -133,7 +133,7 @@ export class SettingsTab extends PluginSettingTab {
           this.plugin.settings.sort_desc = value
           await this.plugin.saveSettings()
 
-          if (this.app.workspace.getLeavesOfType(DuplicateAliasesViewIdentifier).length === 1) {
+          if (this.plugin.app.workspace.getLeavesOfType(DuplicateAliasesViewIdentifier).length === 1) {
             const view = find_duplicate_aliases_view()
             if(!view) {
               return
@@ -156,11 +156,11 @@ export class SettingsTab extends PluginSettingTab {
   reload(): void {
     this.plugin.physical_alias_to_generated_aliases = new Map()
 
-    if (this.app.workspace.getLeavesOfType(ListAliasesViewIdentifier).length === 1) {
+    if (this.plugin.app.workspace.getLeavesOfType(ListAliasesViewIdentifier).length === 1) {
       init_list_aliases_view(this.plugin)
     }
 
-    if (this.app.workspace.getLeavesOfType(DuplicateAliasesViewIdentifier).length === 1) {
+    if (this.plugin.app.workspace.getLeavesOfType(DuplicateAliasesViewIdentifier).length === 1) {
       init_duplicate_aliases_view(this.plugin)
     }
   }
